@@ -1,0 +1,52 @@
+/* Navbar Styles */
+.navbar {
+    background-color: #5a3e36; /* Dark background color */
+    color: #ffd1dc; /* Soft pink text color */
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+  
+  .navbar h1 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #ffd1dc;
+  }
+  
+  .navbar-links {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .navbar a {
+    color: #ffd1dc;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .navbar a:hover {
+    color: #ff94ac; /* Light pink on hover */
+  }
+  
+  .navbar button {
+    background-color: #ffd1dc;
+    color: #5a3e36;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .navbar button:hover {
+    background-color: #ff94ac;
+    color: #5a3e36;
+  }
+  

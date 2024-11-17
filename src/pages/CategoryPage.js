@@ -1,42 +1,67 @@
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import '../styles/CategoryPage.css';
+
 const foodData = {
-    Starters: [
-      { id: 1, name: 'Mini Chocolate Cake', description: 'Perfect for small bites and celebrations!', price: 150, image: 'https://...' },
-      { id: 2, name: 'Cheese Cake Bites', description: 'Delicious cheesy starter bites!', price: 200, image: 'https://...' },
-      // Add more items as needed
-    ],
-    MainCourse: [
-      { id: 3, name: 'Rich Fruit Cake', description: 'A delightful fresh fruit cake!', price: 1200, image: 'https://...' },
-      { id: 4, name: 'Dark Chocolate Cake', description: 'Perfect for rich chocolate lovers!', price: 1500, image: 'https://...' },
-      // Add more items as needed
-    ],
-    Desserts: [
-      { id: 5, name: 'Tiramisu', description: 'A classic Italian dessert!', price: 800, image: 'https://...' },
-      { id: 6, name: 'Brownie Delight', description: 'Rich and gooey chocolate brownies.', price: 500, image: 'https://...' },
-      // Add more items as needed
-    ],
-    OtherVarieties: [
-      { id: 7, name: 'Customized Cupcakes', description: 'Made to order with your favorite toppings!', price: 1000, image: 'https://...' },
-      { id: 8, name: 'Eggless Cakes', description: 'Perfect for vegetarians!', price: 900, image: 'https://...' },
-      // Add more items as needed
-    ]
+  categories: [
+    { name: 'Starters', image: 'https://via.placeholder.com/150/FF5733' },
+    { name: 'MainCourse', image: 'https://via.placeholder.com/150/33FF57' },
+    { name: 'Desserts', image: 'https://via.placeholder.com/150/5733FF' },
+    { name: 'OtherVarieties', image: 'https://via.placeholder.com/150/FF33FF' },
+    { name: 'Snacks', image: 'https://via.placeholder.com/150/33FFFF' },
+    { name: 'Beverages', image: 'https://via.placeholder.com/150/FFFF33' },
+    { name: 'Breakfast', image: 'https://via.placeholder.com/150/FF3333' },
+  ],
+  Starters: [
+    { id: 1, name: 'Mini Chocolate Cake', description: 'Perfect for small bites and celebrations!', price: 150, image: 'https://via.placeholder.com/150' },
+    { id: 2, name: 'Cheese Cake Bites', description: 'Delicious cheesy starter bites!', price: 200, image: 'https://via.placeholder.com/150' },
+  ],
+  MainCourse: [
+    { id: 3, name: 'Rich Fruit Cake', description: 'A delightful fresh fruit cake!', price: 1200, image: 'https://via.placeholder.com/150' },
+    { id: 4, name: 'Dark Chocolate Cake', description: 'Perfect for rich chocolate lovers!', price: 1500, image: 'https://via.placeholder.com/150' },
+  ],
+};
+
+function CategoryPage({ addToCart }) {
+  const { category } = useParams();
+  const [selectedCategory, setSelectedCategory] = useState(category || null);
+  const [notification, setNotification] = useState('');
+
+  const handleCategoryClick = (categoryName) => {
+    setSelectedCategory(categoryName);
   };
-  function CategoryPage({ addToCart }) {
-    const { category } = useParams();
-    const formattedCategory = category ? category.replace(/([A-Z])/g, ' $1').trim() : 'Category';
-    const foods = foodData[category] || [];
-    const navigate = useNavigate();
-  
-    const handleAddToCart = (food) => {
-      addToCart(food);
-      navigate('/cart');
-    };
-  
-    return (
-      <main className="category-page">
-        <h2>{formattedCategory}</h2>
-        {foods.length > 0 ? (
-          <div className="foods-list">
-            {foods.map((food) => (
+
+  const handleAddToCart = (food) => {
+    console.log('Adding to cart:', food); // Debugging log to ensure function is called
+    addToCart(food);
+    setNotification(`${food.name} added to cart!`);
+    setTimeout(() => setNotification(''), 3000); // Hide the notification after 3 seconds
+  };
+
+  const mainCategories = foodData.categories;
+  const foods = foodData[selectedCategory] || [];
+
+  return (
+    <main className="category-page">
+      {notification && <div className="cart-notification">{notification}</div>}
+
+      {!selectedCategory ? (
+        <div className="categories-container">
+          {mainCategories.map((cat) => (
+            <div
+              key={cat.name}
+              className="category-card"
+              onClick={() => handleCategoryClick(cat.name)}
+            >
+              <img src={cat.image} alt={cat.name} className="category-image" />
+              <h3>{cat.name}</h3>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="foods-list">
+          {foods.length > 0 ? (
+            foods.map((food) => (
               <div key={food.id} className="food-card">
                 <img src={food.image} alt={food.name} className="food-image" />
                 <h3>{food.name}</h3>
@@ -46,12 +71,17 @@ const foodData = {
                   Add to Cart
                 </button>
               </div>
-            ))}
-          </div>
-        ) : (
-          <p className="no-foods">No items available in this category.</p>
-        )}
-      </main>
-    );
-  }
-  export default CategoryPage;
+            ))
+          ) : (
+            <p className="no-foods">No items available in this category.</p>
+          )}
+          <button className="back-button" onClick={() => setSelectedCategory(null)}>
+            Back to Categories
+          </button>
+        </div>
+      )}
+    </main>
+  );
+}
+
+export default CategoryPage;

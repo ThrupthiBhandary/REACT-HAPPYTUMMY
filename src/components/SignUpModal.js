@@ -1,8 +1,10 @@
 import React from 'react';
+import './SignUpModal.css';
 
 function SignUpModal({ onClose }) {
   const handleGoogleSignIn = () => {
     alert('Continue with Google clicked');
+    // You can add your Google sign-in logic here
   };
 
   return (

@@ -1,44 +1,40 @@
-import React, { useState } from 'react';
+import React from 'react';
 import '../styles/cart.css';
 
-function Cart() {
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: 'Pizza', quantity: 2, price: 10 },
-    { id: 2, name: 'Burger', quantity: 1, price: 8 },
-  ]);
+function Cart({ cartItems, updateCartItemQuantity, removeCartItem }) {
+  console.log('Cart items:', cartItems); // Debugging log to verify cart items
 
-  const handleQuantityChange = (id, quantity) => {
-    setCartItems(prevItems =>
-      prevItems.map(item =>
-        item.id === id ? { ...item, quantity: Math.max(0, quantity) } : item
-      )
-    );
-  };
-
-  const handleRemoveItem = (id) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== id));
-  };
-
-  const totalAmount = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const totalAmount = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
   return (
     <div className="cart">
       <h2>Shopping Cart</h2>
-      {cartItems.map(item => (
-        <div key={item.id} className="cart-item">
-          <p>{item.name}</p>
-          <p>${item.price}</p>
-          <input
-            type="number"
-            value={item.quantity}
-            onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
-            min="0"
-          />
-          <button onClick={() => handleRemoveItem(item.id)}>Remove</button>
-        </div>
-      ))}
-      <h3>Total: ${totalAmount}</h3>
-      <button className="checkout-button">Proceed to Checkout</button>
+      {cartItems.length > 0 ? (
+        cartItems.map((item) => (
+          <div key={item.id} className="cart-item">
+            <p>{item.name}</p>
+            <p>₹{item.price}</p>
+            <input
+              type="number"
+              value={item.quantity}
+              onChange={(e) =>
+                updateCartItemQuantity(item.id, parseInt(e.target.value, 10))
+              }
+              min="1"
+            />
+            <button onClick={() => removeCartItem(item.id)}>Remove</button>
+          </div>
+        ))
+      ) : (
+        <p>Your cart is empty!</p>
+      )}
+      <h3>Total: ₹{totalAmount}</h3>
+      {cartItems.length > 0 && (
+        <button className="checkout-button">Proceed to Checkout</button>
+      )}
     </div>
   );
 }
